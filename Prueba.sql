@@ -18,4 +18,6 @@ SELECT COALESCE(SUM(likes + 1), -1) AS total FROM posts WHERE id=1;
 
 UPDATE posts SET likes = 0 WHERE id = 4;
 
-UPDATE posts SET likes = (SELECT COALESCE(SUM(likes + 1), -1) AS total FROM posts WHERE id=26) WHERE id = 26;
+UPDATE posts SET likes = (SELECT SUM(likes + 1) AS total FROM posts WHERE id=26) WHERE id = 26;
+
+DELETE FROM posts WHERE id = 3;

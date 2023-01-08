@@ -31,8 +31,7 @@ const newPost = async ({ titulo, url, descripcion, likes = 0 }) => {
 
 const addNewLike = async ({ id }) => {
   try {
-    const consult =
-      "UPDATE posts SET likes = (SELECT COALESCE(SUM(likes + 1), -1) AS total FROM posts WHERE id= $1) WHERE id = $1";
+    const consult = "UPDATE posts SET likes = (SELECT SUM(likes + 1) AS total FROM posts WHERE id= $1) WHERE id = $1";
     const values = [id];
     const result = await pool.query(consult, values);
     return result;
@@ -41,4 +40,15 @@ const addNewLike = async ({ id }) => {
   }
 };
 
-module.exports = { getPosts, newPost, addNewLike };
+const deletePost = async ({ id }) => {
+  try {
+    const consult = "DELETE FROM posts WHERE id = $1";
+    const values = [id];
+    const result = await pool.query(consult, values);
+    return result;
+  } catch (error) {
+    throw error.message;
+  }
+};
+
+module.exports = { getPosts, newPost, addNewLike, deletePost };

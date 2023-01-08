@@ -9,7 +9,7 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static("public"));
 // Tools
-const { getPosts, newPost, addNewLike } = require("./controllers/consults");
+const { getPosts, newPost, addNewLike, deletePost } = require("./controllers/consults");
 // Load page
 app.get("/", (req, res) => {
   res.status(200).sendFile(`${__dirname}/public/index.html`);
@@ -46,6 +46,21 @@ app.put("/posts/like/:id", async (req, res) => {
   try {
     const { rowCount } = await addNewLike(req.params);
     if (rowCount === 0) {
+      res
+        .status(204)
+        .send({ msg: "Ha ocurrido un error en el servidor. Posiblemente la ID no exista. Inténtelo nuevamente" });
+      return;
+    }
+    res.status(200).send({ msg: "Todo perfecto" });
+  } catch (error) {
+    res.status(500).json({ msg: "Something weird happen :c", errorDetail: error });
+  }
+});
+
+app.delete("/posts/:id", async (req, res) => {
+  try {
+    const { rowCount } = await deletePost(req.params);
+    if (rowCount != 1) {
       res
         .status(204)
         .send({ msg: "Ha ocurrido un error en el servidor. Posiblemente la ID no exista. Inténtelo nuevamente" });
