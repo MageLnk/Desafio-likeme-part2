@@ -33,7 +33,10 @@ app.post("/posts", async (req, res) => {
     }
     // Decidí poner un validador de al menos titulo como requisito obligatorio
     const { command } = await newPost(payload);
-    res.status(200).send({ msg: "Todo perfecto" });
+
+    if (command === "INSERT") {
+      res.status(200).send({ msg: "Todo perfecto" });
+    }
   } catch (error) {
     res.status(500).json({ msg: "Something happen :c", errorDetail: error });
   }
