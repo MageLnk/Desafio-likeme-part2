@@ -9,7 +9,7 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static("public"));
 // Tools
-const { getPosts, newPost } = require("./controllers/consults");
+const { getPosts, newPost, addNewLike } = require("./controllers/consults");
 // Load page
 app.get("/", (req, res) => {
   res.status(200).sendFile(`${__dirname}/public/index.html`);
@@ -20,7 +20,7 @@ app.get("/posts", async (req, res) => {
     const posts = await getPosts();
     res.status(200).send(posts);
   } catch (error) {
-    res.status(500).json({ msg: "Something happen :c", errorDetail: error });
+    res.status(500).json({ msg: "Something weird happen :c", errorDetail: error });
   }
 });
 
@@ -32,13 +32,28 @@ app.post("/posts", async (req, res) => {
       return;
     }
     // Decidí poner un validador de al menos titulo como requisito obligatorio
-    const { command } = await newPost(payload);
-
-    if (command === "INSERT") {
+    const { rowCount } = await newPost(payload);
+    if (rowCount != 0) {
       res.status(200).send({ msg: "Todo perfecto" });
+      return;
     }
   } catch (error) {
-    res.status(500).json({ msg: "Something happen :c", errorDetail: error });
+    res.status(500).json({ msg: "Something weird happen :c", errorDetail: error });
+  }
+});
+
+app.put("/posts/like/:id", async (req, res) => {
+  try {
+    const { rowCount } = await addNewLike(req.params);
+    if (rowCount === 0) {
+      res
+        .status(204)
+        .send({ msg: "Ha ocurrido un error en el servidor. Posiblemente la ID no exista. Inténtelo nuevamente" });
+      return;
+    }
+    res.status(200).send({ msg: "Todo perfecto" });
+  } catch (error) {
+    res.status(500).json({ msg: "Something weird happen :c", errorDetail: error });
   }
 });
 
