@@ -19,8 +19,8 @@ app.get("/posts", async (req, res) => {
   try {
     const posts = await getPosts();
     res.status(200).send(posts);
-  } catch (error) {
-    res.status(500).json({ msg: "Something weird happen :c", errorDetail: error });
+  } catch ({ code, message }) {
+    res.status(code).json({ msg: "Something weird happen :c", errorDetail: message });
   }
 });
 
@@ -37,8 +37,8 @@ app.post("/posts", async (req, res) => {
       res.status(200).send({ msg: "Todo perfecto" });
       return;
     }
-  } catch (error) {
-    res.status(500).json({ msg: "Something weird happen :c", errorDetail: error });
+  } catch ({ message }) {
+    res.status(500).json({ msg: "Something weird happen :c", errorDetail: message });
   }
 });
 
@@ -52,8 +52,8 @@ app.put("/posts/like/:id", async (req, res) => {
       return;
     }
     res.status(200).send({ msg: "Todo perfecto" });
-  } catch (error) {
-    res.status(500).json({ msg: "Something weird happen :c", errorDetail: error });
+  } catch ({ message }) {
+    res.status(500).json({ msg: "Something weird happen :c", errorDetail: message });
   }
 });
 
@@ -67,8 +67,8 @@ app.delete("/posts/:id", async (req, res) => {
       return;
     }
     res.status(200).send({ msg: "Todo perfecto" });
-  } catch (error) {
-    res.status(500).json({ msg: "Something weird happen :c", errorDetail: error });
+  } catch ({ message }) {
+    res.status(500).json({ msg: "Something weird happen :c", errorDetail: message });
   }
 });
 
